@@ -19,9 +19,21 @@ const loginUser = async(req, res) => {
     }
     //signupUser
 const signupUser = async(req, res) => {
+        const { email, password } = req.body;
+        try {
+            const user = await User.signup(email, password)
+            const token = createToken(user._id)
+
+            res.status(200).json({ email, token })
+        } catch (error) {
+            res.status(400).json({ error: error.message })
+        }
+    }
+    //updatePassword
+const updatePassword = async(req, res) => {
     const { email, password } = req.body;
     try {
-        const user = await User.signup(email, password)
+        const user = await User.updatePassword(email, password)
         const token = createToken(user._id)
 
         res.status(200).json({ email, token })
@@ -29,4 +41,4 @@ const signupUser = async(req, res) => {
         res.status(400).json({ error: error.message })
     }
 }
-module.exports = { loginUser, signupUser }
+module.exports = { loginUser, signupUser, updatePassword }
